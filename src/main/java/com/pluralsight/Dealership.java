@@ -91,7 +91,7 @@ public class Dealership {
     }
 
     public void addVehicle(Vehicle vehicle) {
-        this.inventory.add(vehicle);
+        //this.inventory.add(vehicle);
     }
 
     public void removeVehicle(int vehicleId) {
