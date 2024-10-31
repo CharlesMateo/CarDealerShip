@@ -1,8 +1,8 @@
 package com.pluralsight;
 
 public class LeaseContract extends Contract {
-    private static final double LEASE_FEE_RATE = 0.07;
-    private static final int LEASE_TERM_MONTHS = 36;
+    private static final double LeaseFeeRate = 0.07;
+    private static final int LeaseTermMonths = 36;
 
     private double expectedEndingValue; // 50% of the original price
 
@@ -16,7 +16,7 @@ public class LeaseContract extends Contract {
     @Override
     public double calculateTotalPrice() {
         double vehiclePrice = getVehicleSold().getPrice();
-        double leaseFee = vehiclePrice * LEASE_FEE_RATE;
+        double leaseFee = vehiclePrice * LeaseFeeRate;
 
         double totalPrice = vehiclePrice + leaseFee;
         setTotalPrice(totalPrice);
@@ -25,7 +25,7 @@ public class LeaseContract extends Contract {
 
     @Override
     public double calculateMonthlyPayment() {
-        double monthlyPayment = (calculateTotalPrice() * 4.0 / 100) / LEASE_TERM_MONTHS;
+        double monthlyPayment = (calculateTotalPrice() * 4.0 / 100) / LeaseTermMonths;
         setMonthlyPayment(monthlyPayment);
         return monthlyPayment;
     }
