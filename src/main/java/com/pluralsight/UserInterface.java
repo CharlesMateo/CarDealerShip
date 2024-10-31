@@ -13,11 +13,6 @@ public class UserInterface {
         this.dealership = new DealershipFileManager("src/inventory.csv").getDealership();
     }
 
-//    private void init() {
-//        DealershipFileManager fileManager = new DealershipFileManager("src/inventory.csv");
-//        this.dealership = fileManager.getDealership();
-//    }
-
     public void display() {
         System.out.println("Welcome to the Car Dealership App!");
         System.out.println("********************************************");
