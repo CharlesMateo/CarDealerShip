@@ -9,6 +9,7 @@ public class Dealership {
     private String address;
     private String phone;
     private List<Vehicle> inventory;
+    private String test;
 
     public Dealership(String name, String address, String phone) {
         this.name = name;
