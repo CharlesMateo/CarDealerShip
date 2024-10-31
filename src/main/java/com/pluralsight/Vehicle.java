@@ -1,4 +1,3 @@
-
 package com.pluralsight;
 
 public class Vehicle {
@@ -54,7 +53,9 @@ public class Vehicle {
         return this.price;
     }
 
+    @Override
     public String toString() {
-        return "ID: " + this.id + ", Year: " + this.year + ", Make: " + this.make + ", Model: " + this.model + ", Type: " + this.type + ", Color: " + this.color + ", Mileage: " + this.mileage + ", Price: $" + this.price;
+        return String.format("ID: %d, Make: %s, Model: %s, Year: %d, Color: %s, Mileage: %d, Type: %s, Price: %.2f",
+                id, make, model, year, color, mileage, type, price);
     }
 }

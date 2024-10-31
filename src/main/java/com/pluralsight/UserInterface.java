@@ -1,4 +1,3 @@
-
 package com.pluralsight;
 
 import java.util.Iterator;
@@ -6,26 +5,26 @@ import java.util.List;
 import java.util.Scanner;
 
 public class UserInterface {
-    Scanner scanner;
-    private Dealership dealership;
+    private final Scanner scanner;
+    private final Dealership dealership;
 
     public UserInterface() {
         this.scanner = new Scanner(System.in);
-        this.init();
+        this.dealership = new DealershipFileManager("src/inventory.csv").getDealership();
     }
 
-    private void init() {
-        DealershipFileManager fileManager = new DealershipFileManager("src/inventory.csv");
-        this.dealership = fileManager.getDealership();
-    }
+//    private void init() {
+//        DealershipFileManager fileManager = new DealershipFileManager("src/inventory.csv");
+//        this.dealership = fileManager.getDealership();
+//    }
 
     public void display() {
         System.out.println("Welcome to the Car Dealership App!");
         System.out.println("********************************************");
-        System.out.println("Please select an option from the menu below:");
 
         int choice;
         do {
+            System.out.println("Please select an option from the menu below:");
             System.out.println("1. Find vehicles by price range");
             System.out.println("2. Find vehicles by make / model");
             System.out.println("3. Find vehicles by year range");
@@ -36,142 +35,130 @@ public class UserInterface {
             System.out.println("8. Add a vehicle");
             System.out.println("9. Remove a vehicle");
             System.out.println("0. Quit");
-            System.out.println("********************************************");
-            System.out.println("Enter your choice: ");
-            choice = this.scanner.nextInt();
-            switch (choice) {
-                case 0:
-                    System.out.println("Exiting...");
-                    break;
-                case 1:
-                    this.processFindVehiclesByPriceRange();
-                    break;
-                case 2:
-                    this.processFindVehiclesByMakeModel();
-                    break;
-                case 3:
-                    this.processFindVehiclesByYearRange();
-                    break;
-                case 4:
-                    this.processFindVehiclesByColor();
-                    break;
-                case 5:
-                    this.processFindVehiclesByMileageRange();
-                    break;
-                case 6:
-                    this.processFindVehiclesByType();
-                    break;
-                case 7:
-                    this.processGetAllVehicles();
-                    break;
-                case 8:
-                    this.processAddVehicle();
-                    break;
-                case 9:
-                    this.processRemoveVehicle();
-                    break;
-                default:
-                    System.out.println("Invalid option. Try again.");
-            }
-        } while(choice != 0);
+            System.out.print("Enter your choice: ");
 
+            choice = getIntInput();
+
+            switch (choice) {
+                case 0 -> System.out.println("Exiting...");
+                case 1 -> processFindVehiclesByPriceRange();
+                case 2 -> processFindVehiclesByMakeModel();
+                case 3 -> processFindVehiclesByYearRange();
+                case 4 -> processFindVehiclesByColor();
+                case 5 -> processFindVehiclesByMileageRange();
+                case 6 -> processFindVehiclesByType();
+                case 7 -> processGetAllVehicles();
+                case 8 -> processAddVehicle();
+                case 9 -> processRemoveVehicle();
+                default -> System.out.println("Invalid option. Try again.");
+            }
+        } while (choice != 0);
+
+        scanner.close();
+    }
+
+    private int getIntInput() {
+        while (!scanner.hasNextInt()) {
+            System.out.print("Please enter a valid integer: ");
+            scanner.next(); // Clear invalid input
+        }
+        return scanner.nextInt();
     }
 
     public void displayVehicles(List<Vehicle> vehicles) {
-        if (vehicles != null && !vehicles.isEmpty()) {
-            System.out.printf("%-10s %-10s %-10s %-10s %-10s %-10s %-10s %-10s\n", "ID", "Year", "Make", "Model", "Type", "Color", "Mileage", "Price");
-            Iterator var2 = vehicles.iterator();
-
-            while(var2.hasNext()) {
-                Vehicle vehicle = (Vehicle)var2.next();
-                System.out.printf("%-10s %-10d %-10s %-10s %-10s %-10s %-10d %-10.2f\n", vehicle.getId(), vehicle.getYear(), vehicle.getMake(), vehicle.getModel(), vehicle.getType(), vehicle.getColor(), vehicle.getMileage(), vehicle.getPrice());
-            }
-        } else {
+        if (vehicles == null || vehicles.isEmpty()) {
             System.out.println("No vehicles found.");
+            return;
         }
-
+        System.out.printf("%-10s %-10s %-10s %-10s %-10s %-10s %-10s %-10s\n",
+                "ID", "Year", "Make", "Model", "Type", "Color", "Mileage", "Price");
+        vehicles.forEach(vehicle -> System.out.printf("%-10s %-10d %-10s %-10s %-10s %-10s %-10d %-10.2f\n",
+                vehicle.getId(), vehicle.getYear(), vehicle.getMake(), vehicle.getModel(),
+                vehicle.getType(), vehicle.getColor(), vehicle.getMileage(), vehicle.getPrice()));
     }
 
     public void processFindVehiclesByPriceRange() {
         System.out.print("Enter minimum price: ");
-        double minPrice = this.scanner.nextDouble();
+        double minPrice = scanner.nextDouble();
         System.out.print("Enter maximum price: ");
-        double maxPrice = this.scanner.nextDouble();
-        List<Vehicle> vehicles = this.dealership.getVehiclesByPriceRange(minPrice, maxPrice);
-        this.displayVehicles(vehicles);
+        double maxPrice = scanner.nextDouble();
+        List<Vehicle> vehicles = dealership.getVehiclesByPriceRange(minPrice, maxPrice);
+        displayVehicles(vehicles);
     }
 
     public void processFindVehiclesByMakeModel() {
         System.out.print("Enter make: ");
-        String make = this.scanner.next();
+        String make = scanner.next();
         System.out.print("Enter model: ");
-        String model = this.scanner.next();
-        List<Vehicle> vehicles = this.dealership.getVehiclesByMakeModel(make, model);
-        this.displayVehicles(vehicles);
+        String model = scanner.next();
+        List<Vehicle> vehicles = dealership.getVehiclesByMakeModel(make, model);
+        displayVehicles(vehicles);
     }
 
     public void processFindVehiclesByYearRange() {
         System.out.print("Enter start year: ");
-        int startYear = this.scanner.nextInt();
+        int startYear = getIntInput();
         System.out.print("Enter end year: ");
-        int endYear = this.scanner.nextInt();
-        List<Vehicle> vehicles = this.dealership.getVehiclesByYearRange(startYear, endYear);
-        this.displayVehicles(vehicles);
+        int endYear = getIntInput();
+        List<Vehicle> vehicles = dealership.getVehiclesByYearRange(startYear, endYear);
+        displayVehicles(vehicles);
     }
 
     public void processFindVehiclesByColor() {
         System.out.print("Enter color: ");
-        String color = this.scanner.next();
-        List<Vehicle> vehicles = this.dealership.getVehiclesByColor(color);
-        this.displayVehicles(vehicles);
+        String color = scanner.next();
+        List<Vehicle> vehicles = dealership.getVehiclesByColor(color);
+        displayVehicles(vehicles);
     }
 
     public void processFindVehiclesByMileageRange() {
         System.out.print("Enter minimum mileage: ");
-        int minMileage = this.scanner.nextInt();
+        int minMileage = getIntInput();
         System.out.print("Enter maximum mileage: ");
-        int maxMileage = this.scanner.nextInt();
-        List<Vehicle> vehicles = this.dealership.getVehiclesByMileageRange(minMileage, maxMileage);
-        this.displayVehicles(vehicles);
+        int maxMileage = getIntInput();
+        List<Vehicle> vehicles = dealership.getVehiclesByMileageRange(minMileage, maxMileage);
+        displayVehicles(vehicles);
     }
 
     public void processFindVehiclesByType() {
         System.out.print("Enter type (car, truck, SUV, van): ");
-        String type = this.scanner.next();
-        List<Vehicle> vehicles = this.dealership.getVehiclesByType(type);
-        this.displayVehicles(vehicles);
+        String type = scanner.next();
+        List<Vehicle> vehicles = dealership.getVehiclesByType(type);
+        displayVehicles(vehicles);
     }
 
     public void processGetAllVehicles() {
-        List<Vehicle> vehicles = this.dealership.getAllVehicles();
-        this.displayVehicles(vehicles);
+        List<Vehicle> vehicles = dealership.getAllVehicles();
+        displayVehicles(vehicles);
     }
 
     public void processAddVehicle() {
         System.out.print("Enter vehicle ID: ");
-        int id = this.scanner.nextInt();
+        int id = getIntInput();
         System.out.print("Enter vehicle make: ");
-        String make = this.scanner.next();
+        String make = scanner.next();
         System.out.print("Enter vehicle model: ");
-        String model = this.scanner.next();
+        String model = scanner.next();
         System.out.print("Enter vehicle year: ");
-        int year = this.scanner.nextInt();
+        int year = getIntInput();
         System.out.print("Enter vehicle color: ");
-        String color = this.scanner.next();
+        String color = scanner.next();
         System.out.print("Enter vehicle mileage: ");
-        int mileage = this.scanner.nextInt();
+        int mileage = getIntInput();
         System.out.print("Enter vehicle type (car, truck, SUV, van): ");
-        String type = this.scanner.next();
+        String type = scanner.next();
         System.out.print("Enter vehicle price: ");
-        double price = this.scanner.nextDouble();
+        double price = scanner.nextDouble();
+
         Vehicle newVehicle = new Vehicle(id, make, model, year, color, mileage, type, price);
-        this.dealership.addVehicle(newVehicle);
+        dealership.addVehicle(newVehicle);
         System.out.println("Vehicle added successfully!");
     }
 
     public void processRemoveVehicle() {
         System.out.print("Enter vehicle ID to remove: ");
-        int vehicleId = this.scanner.nextInt();
-        this.dealership.removeVehicle(vehicleId);
+        int vehicleId = getIntInput();
+        dealership.removeVehicle(vehicleId);
+        System.out.println("Vehicle removed successfully!");
     }
 }

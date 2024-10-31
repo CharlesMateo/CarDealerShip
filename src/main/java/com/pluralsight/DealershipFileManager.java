@@ -1,4 +1,3 @@
-
 package com.pluralsight;
 
 import java.io.File;
@@ -13,50 +12,28 @@ public class DealershipFileManager {
     }
 
     public Dealership getDealership() {
-        Dealership dealership = null;
+        try (Scanner scanner = new Scanner(new File(filename))) {
+            Dealership dealership = null;
+            if (scanner.hasNextLine()) {
+                String[] info = scanner.nextLine().split("\\|");
+                dealership = new Dealership(info[0], info[1], info[2]);
 
-        try {
-            Scanner scanner = new Scanner(new File(this.filename));
-
-            try {
-                if (scanner.hasNextLine()) {
-                    String[] dealershipInfo = scanner.nextLine().split("\\|");
-                    dealership = new Dealership(dealershipInfo[0], dealershipInfo[1], dealershipInfo[2]);
-
-                    while(scanner.hasNextLine()) {
-                        String line = scanner.nextLine();
-                        String[] vehicleInfo = line.split("\\|");
-                        int vin = Integer.parseInt(vehicleInfo[0]);
-                        int year = Integer.parseInt(vehicleInfo[1]);
-                        String make = vehicleInfo[2];
-                        String model = vehicleInfo[3];
-                        String type = vehicleInfo[4];
-                        String color = vehicleInfo[5];
-                        int mileage = Integer.parseInt(vehicleInfo[6]);
-                        double price = Double.parseDouble(vehicleInfo[7]);
-                        Vehicle vehicle = new Vehicle(vin, make, model, year, color, mileage, type, price);
-                        dealership.addVehicle(vehicle);
-                    }
+                while (scanner.hasNextLine()) {
+                    String line = scanner.nextLine();
+                    String[] vehicleData = line.split("\\|");
+                    Vehicle vehicle = new Vehicle(
+                            Integer.parseInt(vehicleData[0]),
+                            vehicleData[2], vehicleData[3], Integer.parseInt(vehicleData[1]),
+                            vehicleData[5], Integer.parseInt(vehicleData[6]), vehicleData[4],
+                            Double.parseDouble(vehicleData[7])
+                    );
+                    dealership.addVehicle(vehicle);
                 }
-            } catch (Throwable var17) {
-                try {
-                    scanner.close();
-                } catch (Throwable var16) {
-                    var17.addSuppressed(var16);
-                }
-
-                throw var17;
             }
-
-            scanner.close();
-        } catch (FileNotFoundException var18) {
+            return dealership;
+        } catch (FileNotFoundException e) {
             System.out.println("Error: Inventory file not found.");
-        } catch (NumberFormatException var19) {
-            NumberFormatException e = var19;
-            System.out.println("Error: Invalid number format in inventory file.");
-            e.printStackTrace();
+            return null;
         }
-
-        return dealership;
     }
 }
