@@ -1,16 +1,18 @@
 package com.pluralsight;
 
-import java.util.Iterator;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
 public class UserInterface {
     private final Scanner scanner;
     private final Dealership dealership;
+    private final ContractFileManager contractFileManager;
 
     public UserInterface() {
         this.scanner = new Scanner(System.in);
         this.dealership = new DealershipFileManager("src/inventory.csv").getDealership();
+        this.contractFileManager = new ContractFileManager("src/contracts.txt");
     }
 
     public void display() {
@@ -73,19 +75,26 @@ public class UserInterface {
     }
 
     public void processFindVehiclesByPriceRange() {
-        System.out.print("Enter minimum price: ");
-        double minPrice = scanner.nextDouble();
-        System.out.print("Enter maximum price: ");
-        double maxPrice = scanner.nextDouble();
-        List<Vehicle> vehicles = dealership.getVehiclesByPriceRange(minPrice, maxPrice);
-        displayVehicles(vehicles);
+        try {
+            System.out.print("Enter minimum price: ");
+            double minPrice = scanner.nextDouble();
+            System.out.print("Enter maximum price: ");
+            double maxPrice = scanner.nextDouble();
+            List<Vehicle> vehicles = dealership.getVehiclesByPriceRange(minPrice, maxPrice);
+            displayVehicles(vehicles);
+        } catch (InputMismatchException e) {
+            System.out.println("Invalid input. Please enter numeric values.");
+            scanner.nextLine(); // Clear invalid input
+        }
     }
 
     public void processFindVehiclesByMakeModel() {
         System.out.print("Enter make: ");
-        String make = scanner.next();
+        String make = scanner.nextLine(); // Changed to nextLine()
+
         System.out.print("Enter model: ");
-        String model = scanner.next();
+        String model = scanner.nextLine(); // Changed to nextLine()
+
         List<Vehicle> vehicles = dealership.getVehiclesByMakeModel(make, model);
         displayVehicles(vehicles);
     }
@@ -101,7 +110,7 @@ public class UserInterface {
 
     public void processFindVehiclesByColor() {
         System.out.print("Enter color: ");
-        String color = scanner.next();
+        String color = scanner.nextLine();
         List<Vehicle> vehicles = dealership.getVehiclesByColor(color);
         displayVehicles(vehicles);
     }
@@ -117,7 +126,7 @@ public class UserInterface {
 
     public void processFindVehiclesByType() {
         System.out.print("Enter type (car, truck, SUV, van): ");
-        String type = scanner.next();
+        String type = scanner.nextLine();
         List<Vehicle> vehicles = dealership.getVehiclesByType(type);
         displayVehicles(vehicles);
     }
@@ -130,20 +139,31 @@ public class UserInterface {
     public void processAddVehicle() {
         System.out.print("Enter vehicle ID: ");
         int id = getIntInput();
+
+        // Use nextLine() for string inputs to capture full line
         System.out.print("Enter vehicle make: ");
-        String make = scanner.next();
+        String make = scanner.nextLine(); // Changed to nextLine()
+
         System.out.print("Enter vehicle model: ");
-        String model = scanner.next();
+        String model = scanner.nextLine(); // Changed to nextLine()
+
         System.out.print("Enter vehicle year: ");
         int year = getIntInput();
+
         System.out.print("Enter vehicle color: ");
-        String color = scanner.next();
+        String color = scanner.nextLine(); // Changed to nextLine()
+
         System.out.print("Enter vehicle mileage: ");
         int mileage = getIntInput();
+
         System.out.print("Enter vehicle type (car, truck, SUV, van): ");
-        String type = scanner.next();
+        String type = scanner.nextLine(); // Changed to nextLine()
+
         System.out.print("Enter vehicle price: ");
-        double price = scanner.nextDouble();
+        double price = scanner.nextDouble(); // Use nextDouble() for numeric input
+
+        // Optionally consume the remaining newline after nextDouble()
+        scanner.nextLine();
 
         Vehicle newVehicle = new Vehicle(id, make, model, year, color, mileage, type, price);
         dealership.addVehicle(newVehicle);

@@ -27,7 +27,7 @@ public class DealershipFileManager {
                             vehicleData[5], Integer.parseInt(vehicleData[6]), vehicleData[4],
                             Double.parseDouble(vehicleData[7])
                     );
-                    //dealership.addVehicle(vehicle);
+                    dealership.addVehicle(vehicle);
                 }
             }
             return dealership;

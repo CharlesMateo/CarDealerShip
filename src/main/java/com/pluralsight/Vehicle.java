@@ -52,7 +52,6 @@ public class Vehicle {
     public double getPrice() {
         return this.price;
     }
-
     @Override
     public String toString() {
         return String.format("ID: %d, Make: %s, Model: %s, Year: %d, Color: %s, Mileage: %d, Type: %s, Price: %.2f",
