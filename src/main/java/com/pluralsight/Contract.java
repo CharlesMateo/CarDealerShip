@@ -10,7 +10,7 @@ public class Contract {
     private Double totalPrice;
     private String VehicleSold;
     private LocalDate contractDate;
-    private double monthlyPayment; // a new comment
+    private double monthlyPayment; // a new comment - Is this a good variable name
 
     public Contract(String customerName, String customerEmail, double totalPrice, String VehicleSold, LocalDate contractDate, double monthlyPayment){
         this.customerName = customerName;
