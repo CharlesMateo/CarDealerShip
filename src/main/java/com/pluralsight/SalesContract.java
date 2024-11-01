@@ -1,11 +1,9 @@
 package com.pluralsight;
-//Commit
+
 // Import necessary classes
 //TODO import java.util.Objects; // In case you need to handle objects in future methods
 
         public class SalesContract extends Contract {
-            // Constants for calculations
-            //Sales contract is done... You can see the latest version of mine if you see this line!
             private static final double SALES_TAX_RATE = 0.05; // 5% sales tax
             private static final double RECORDING_FEE = 100.0; // Fixed recording fee
             private static final double PROCESSING_FEE_UNDER_10K = 295.0; // Fee for vehicles under $10,000
