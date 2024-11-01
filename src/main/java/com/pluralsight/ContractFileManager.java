@@ -10,7 +10,7 @@ public class ContractFileManager {
     public ContractFileManager(String filename) {
         this.filename = filename;
     }
-
+    // Test
     public void saveContract(Object contract) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename, true))) {
             StringBuilder contractLine = new StringBuilder();
