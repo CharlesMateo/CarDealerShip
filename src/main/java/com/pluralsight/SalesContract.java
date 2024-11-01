@@ -10,7 +10,7 @@ package com.pluralsight;
             private static final double PROCESSING_FEE_UNDER_10K = 295.0; // Fee for vehicles under $10,000
             private static final double PROCESSING_FEE_ABOVE_10K = 495.0; // Fee for vehicles above $10,000
             private boolean finance; // Financing option
-            private double salesPrice; // Price of the vehicle
+            private double salesPrice; // Price of the vehicle!
 
             // Constructor for SalesContract
             public SalesContract(String date, String customerName, String customerEmail, Vehicle vehicle, double salesPrice, boolean finance) {
